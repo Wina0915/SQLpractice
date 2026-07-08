@@ -1,0 +1,11 @@
+id,level,question,reference_sql
+1,1,studentsテーブルのすべてのデータを表示してください。,SELECT * FROM students;
+2,1,studentsテーブルからname列だけを表示してください。,SELECT name FROM students;
+3,1,scoreが80点以上の生徒を表示してください。,SELECT * FROM students WHERE score >= 80;
+4,1,3年生の生徒を表示してください。,SELECT * FROM students WHERE grade = 3;
+5,2,scoreが高い順に生徒一覧を表示してください。,SELECT * FROM students ORDER BY score DESC;
+6,2,上位5人の生徒を表示してください。,SELECT * FROM students ORDER BY score DESC LIMIT 5;
+7,2,2年生でscoreが70点以上の生徒を表示してください。,SELECT * FROM students WHERE grade = 2 AND score >= 70;
+8,2,classが'A'の生徒の人数を表示してください。,SELECT COUNT(*) FROM students WHERE class = 'A';
+9,3,学年ごとの平均点を表示してください。,"SELECT grade, AVG(score) FROM students GROUP BY grade;"
+10,3,平均点が80点以上の学年だけを表示してください。,"SELECT grade, AVG(score) FROM students GROUP BY grade HAVING AVG(score) >= 80;"
