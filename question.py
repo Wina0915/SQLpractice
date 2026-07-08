@@ -5,7 +5,7 @@ def get_question(level):
     cur = conn.cursor()
 
     cur.execute("""
-        SELECT question, reference_sql
+        SELECT id, question, reference_sql
         FROM questions
         WHERE level = ?
         ORDER BY RANDOM()
@@ -16,10 +16,29 @@ def get_question(level):
 
     conn.close()
 
-    if problem is None:
-        return None
 
-    question = problem[0]
-    reference_sql = problem[1]
+    question_id = problem[0]
+    question = problem[1]
+    reference_sql = problem[2]
 
-    return question, reference_sql
+    return question_id, question, reference_sql
+
+def get_reference_sql(question_id):
+
+    conn = sqlite3.connect("database.db")
+    cur = conn.cursor()
+
+    cur.execute("""
+    SELECT reference_sql
+    FROM questions
+    WHERE id = ?
+    """, (question_id,))
+
+    result = cur.fetchone()
+
+    conn.close()
+
+    if result:
+        return result[0]
+
+    return None
