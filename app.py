@@ -31,7 +31,7 @@ while True:
 # ------------------------
 # クイズ開始
 # ------------------------
-question, reference_sql = get_question(level)
+question_id, question, reference_sql = get_question(level)
 
 print("\n=== SQLクイズ ===")
 print(question)
