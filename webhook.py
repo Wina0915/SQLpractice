@@ -16,6 +16,11 @@ def webhook():
     # DialogflowからIntent名を取得
     intent = req["queryResult"]["intent"]["displayName"]
 
+    print("===== DEBUG =====")
+    print("intent:", intent)
+    print("queryText:", req["queryResult"]["queryText"])
+    print("=================")
+
     # ユーザーを識別するID
     user_id = req["session"]
 
