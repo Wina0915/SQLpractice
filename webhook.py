@@ -26,7 +26,6 @@ def webhook():
 
         question_id, question, _ = get_question(1)
 
-        # 現在の問題を保存
         save_question(user_id, question_id)
 
         response_text = (
@@ -36,7 +35,16 @@ def webhook():
         )
 
         return jsonify({
-            "fulfillmentText": response_text
+            "fulfillmentText": response_text,
+            "outputContexts": [
+                {
+                    "name": req["session"] + "/contexts/sql_quiz",
+                    "lifespanCount": 5,
+                    "parameters": {
+                        "question_id": question_id
+                    }
+                }
+            ]
         })
 
     # ------------------------
@@ -46,7 +54,6 @@ def webhook():
 
         question_id, question, _ = get_question(2)
 
-        # 現在の問題を保存
         save_question(user_id, question_id)
 
         response_text = (
@@ -56,7 +63,16 @@ def webhook():
         )
 
         return jsonify({
-            "fulfillmentText": response_text
+            "fulfillmentText": response_text,
+            "outputContexts": [
+                {
+                    "name": req["session"] + "/contexts/sql_quiz",
+                    "lifespanCount": 5,
+                    "parameters": {
+                        "question_id": question_id
+                    }
+                }
+            ]
         })
 
     # ------------------------
@@ -66,7 +82,6 @@ def webhook():
 
         question_id, question, _ = get_question(3)
 
-        # 現在の問題を保存
         save_question(user_id, question_id)
 
         response_text = (
@@ -76,7 +91,16 @@ def webhook():
         )
 
         return jsonify({
-            "fulfillmentText": response_text
+            "fulfillmentText": response_text,
+            "outputContexts": [
+                {
+                    "name": req["session"] + "/contexts/sql_quiz",
+                    "lifespanCount": 5,
+                    "parameters": {
+                        "question_id": question_id
+                    }
+                }
+            ]
         })
 
     # ------------------------
