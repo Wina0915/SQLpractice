@@ -27,6 +27,6 @@ def judge(user_sql, reference_sql, db_name="database.db"):
 
     # 順番は無視して比較
     if sorted(user_result) == sorted(correct_result):
-        return True, "正解！"
+        return True, "🎉 正解！"
 
     return False, "結果が異なります。"

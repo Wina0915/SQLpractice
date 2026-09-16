@@ -147,8 +147,7 @@ def webhook():
         if correct:
 
             response_text = (
-                "🎉 正解！\n\n"
-                + message
+                message
             )
 
         else:
