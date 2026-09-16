@@ -9,3 +9,23 @@ id,level,question,reference_sql
 8,2,classが'A'の生徒の人数を表示してください。,SELECT COUNT(*) FROM students WHERE class = 'A';
 9,3,学年ごとの平均点を表示してください。,"SELECT grade, AVG(score) FROM students GROUP BY grade;"
 10,3,平均点が80点以上の学年だけを表示してください。,"SELECT grade, AVG(score) FROM students GROUP BY grade HAVING AVG(score) >= 80;"
+11,1,scoreが60点未満の生徒を表示してください。,SELECT * FROM students WHERE score < 60;
+12,1,2年生の生徒の名前を表示してください。,SELECT name FROM students WHERE grade = 2;
+13,1,Aクラスの生徒をすべて表示してください。,SELECT * FROM students WHERE class = 'A';
+14,1,scoreが90点以上の生徒の名前とscoreを表示してください。,"SELECT name, score FROM students WHERE score >= 90;"
+15,1,1年生である生徒の名前を表示してください。,SELECT name FROM students WHERE grade = 1;
+16,1,scoreが70点以上80点以下の生徒を表示してください。,SELECT * FROM students WHERE score BETWEEN 70 AND 80;
+17,1,Bクラスではない生徒を表示してください。,SELECT * FROM students WHERE class != 'B';
+18,2,scoreが低い順に生徒の名前とscoreを表示してください。,"SELECT name, score FROM students ORDER BY score ASC;"
+19,2,scoreが90点以上の生徒をscoreの高い順に表示してください。,SELECT * FROM students WHERE score >= 90 ORDER BY score DESC;
+20,2,1年生の中でscoreが高い順に3人を表示してください。,SELECT * FROM students WHERE grade = 1 ORDER BY score DESC LIMIT 3;
+21,2,生徒の人数を表示してください。,SELECT COUNT(*) FROM students;
+22,2,scoreの最高点を表示してください。,SELECT MAX(score) FROM students;
+23,2,scoreの最低点を表示してください。,SELECT MIN(score) FROM students;
+24,2,全生徒の平均点を表示してください。,SELECT AVG(score) FROM students;
+25,2,Aクラスの生徒の平均点を表示してください。,SELECT AVG(score) FROM students WHERE class = 'A';
+26,3,学年ごとの生徒数を表示してください。,"SELECT grade, COUNT(*) FROM students GROUP BY grade;"
+27,3,クラスごとの平均点を表示してください。,"SELECT class, AVG(score) FROM students GROUP BY class;"
+28,3,学年ごとの最高点を表示してください。,"SELECT grade, MAX(score) FROM students GROUP BY grade;"
+29,3,平均点が75点以上のクラスを表示してください。,"SELECT class, AVG(score) FROM students GROUP BY class HAVING AVG(score) >= 75;"
+30,3,生徒数が5人以上いる学年を表示してください。,"SELECT grade, COUNT(*) FROM students GROUP BY grade HAVING COUNT(*) >= 5;"
