@@ -1,49 +1,100 @@
-import sqlite3
-from judge import judge
-from question import get_question
 
-conn = sqlite3.connect("database.db")
-cur = conn.cursor()
+import os
+import json
+import uuid
 
-# ------------------------
-# レベル選択（最初だけ）
-# ------------------------
-while True:
-    level = input(
-        "レベルを入力してください（1/2/3 または 初級/中級/上級）："
-    ).strip()
+from flask import Flask, request, jsonify
+from flask_cors import CORS
+from google.cloud import dialogflow_v2 as dialogflow
 
-    if level in ["1", "初級"]:
-        level = 1
-        break
 
-    elif level in ["2", "中級"]:
-        level = 2
-        break
+app = Flask(__name__)
+CORS(app)
 
-    elif level in ["3", "上級"]:
-        level = 3
-        break
+# Renderに登録したSecret File
+CREDENTIALS_PATH = "/etc/secrets/dialogflow-key.json"
 
-    else:
-        print("レベルは1～3または初級・中級・上級で入力してください。")
+# 認証情報を読み込む
+with open(CREDENTIALS_PATH, "r", encoding="utf-8") as file:
+    credentials_data = json.load(file)
 
-# ------------------------
-# クイズ開始
-# ------------------------
-question_id, question, reference_sql = get_question(level)
+# Google CloudのプロジェクトIDを取得
+PROJECT_ID = credentials_data["project_id"]
 
-print("\n=== SQLクイズ ===")
-print(question)
-print()
+# Google Cloud認証情報を設定
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = CREDENTIALS_PATH
 
-user_sql = input("SQLを入力してください：\n")
 
-correct, message = judge(user_sql, reference_sql)
+@app.route("/", methods=["GET"])
+def home():
+    return jsonify({
+        "status": "success",
+        "message": "Oshikatsu Chat API is running!"
+    })
 
-print()
-print(message)
 
-if not correct:
-    print("\n正解SQL")
-    print(reference_sql)
+@app.route("/api/chat", methods=["POST"])
+def chat():
+    data = request.get_json(silent=True)
+
+    if not data or not data.get("message"):
+        return jsonify({
+            "error": "メッセージがありません"
+        }), 400
+
+    message = data["message"].strip()
+
+    if not message:
+        return jsonify({
+            "error": "メッセージがありません"
+        }), 400
+
+    # 同じ会話では同じsession_idを使用する
+    session_id = data.get("sessionId") or str(uuid.uuid4())
+
+    try:
+        # Dialogflowクライアントを作成
+        session_client = dialogflow.SessionsClient()
+
+        # Dialogflowのセッションを指定
+        session = session_client.session_path(
+            PROJECT_ID,
+            session_id
+        )
+
+        # テキスト入力を作成
+        text_input = dialogflow.TextInput(
+            text=message,
+            language_code="ja"
+        )
+
+        query_input = dialogflow.QueryInput(
+            text=text_input
+        )
+
+        # Dialogflowに問い合わせる
+        response = session_client.detect_intent(
+            request={
+                "session": session,
+                "query_input": query_input
+            }
+        )
+
+        # Dialogflowからの回答を取得
+        reply = response.query_result.fulfillment_text
+
+        return jsonify({
+            "reply": reply,
+            "sessionId": session_id
+        })
+
+    except Exception as e:
+        app.logger.exception("Dialogflow connection error")
+
+        return jsonify({
+            "error": "チャットの処理中にエラーが発生したよ。"
+        }), 500
+
+
+if __name__ == "__main__":
+    app.run()
